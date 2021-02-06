@@ -1,5 +1,6 @@
 package com.yltfy.controller;
 
+import com.yltfy.entity.Admin;
 import com.yltfy.entity.Reader;
 import com.yltfy.service.LoginService;
 import com.yltfy.service.impl.LoginServiceImpl;
@@ -23,10 +24,20 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-        Reader reader = loginService.login(username, password);
-        if (reader != null) {
+        String type = req.getParameter("type");
+        Object object = loginService.login(username, password, type);
+        if (object != null) {
             HttpSession session = req.getSession();
-            session.setAttribute("user", reader);
+            switch (type) {
+                case "reader":
+                    Reader reader = (Reader) object;
+                    session.setAttribute("reader", reader);
+                    break;
+                case "admin":
+                    Admin admin = (Admin) object;
+                    session.setAttribute("admin", admin);
+                    break;
+            }
         } else {
             resp.sendRedirect("/login.jsp");
         }
