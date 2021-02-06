@@ -14,14 +14,16 @@ import java.util.List;
 
 public class BookRepositoryImpl implements BookRepository {
     @Override
-    public List<Book> findAll() {
+    public List<Book> findAll(int page, int limit) {
         Connection connection = JDBCTools.getConnection();
-        String sql = "select * from book, bookcase where book.bookcaseid = bookcase.id";
+        String sql = "select * from book, bookcase where book.bookcaseid = bookcase.id limit ?, ? ";
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         List<Book> list = new ArrayList<>();
         try {
             preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, (page - 1) * limit);
+            preparedStatement.setInt(2, limit);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 list.add(new Book(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4),resultSet.getInt(5),resultSet.getDouble(6), new BookCase(resultSet.getInt(9), resultSet.getString(10))));
@@ -32,5 +34,30 @@ public class BookRepositoryImpl implements BookRepository {
             JDBCTools.release(connection, preparedStatement, resultSet);
         }
         return list;
+    }
+
+    /**
+     * 返回总记录数
+     * @return
+     */
+    @Override
+    public int getPages() {
+        Connection connection = JDBCTools.getConnection();
+        String sql = "select count(*) from book, bookcase where book.bookcaseid = bookcase.id";
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        int count = 0;
+        try {
+            preparedStatement = connection.prepareStatement(sql);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                count = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            JDBCTools.release(connection, preparedStatement, resultSet);
+        }
+        return count;
     }
 }

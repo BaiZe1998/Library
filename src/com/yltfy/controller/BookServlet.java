@@ -22,8 +22,14 @@ public class BookServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //获取数据
-        List<Book> list = bookService.findAll();
+        String pageStr = req.getParameter("page");
+        Integer page = Integer.parseInt(pageStr);
+        //获取当前分页的数据 以及总页数
+        List<Book> list = bookService.findAll(page);
+        req.setAttribute("pages", bookService.getPages());
         req.setAttribute("list", list);
+        req.setAttribute("dataPrePage", 6);
+        req.setAttribute("currentPage", page);
         //将数据发送到视图
         req.getRequestDispatcher("/index.jsp").forward(req, resp);
     }

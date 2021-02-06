@@ -33,7 +33,8 @@ public class LoginServlet extends HttpServlet {
                     Reader reader = (Reader) object;
                     session.setAttribute("reader", reader);
                     //重定向到负责展示读者首页图书信息的Servlet控制器 book，此时用户信息保存在session中
-                    resp.sendRedirect("/book");
+                    //读者登陆成功后跳转的分页默认位第一页
+                    resp.sendRedirect("/book?page=1");
                     break;
                 case "admin":
                     Admin admin = (Admin) object;

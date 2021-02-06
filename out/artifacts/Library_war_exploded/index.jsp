@@ -24,33 +24,31 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	 
   	<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
   	<script type="text/javascript">
-		$(function(){
-			$("#next").click(function(){
+		$(function () {
+			$("#next").click(function() {
 				var pages = parseInt($("#pages").html());
 				var page = parseInt($("#currentPage").html());
-				if(page == pages){
+				if(page == pages) {
 					return;
 				}
 				page++;
-				location.href = "/book?page="+page;
+				location.href = "/book?page=" + page;
 			})
-
 			$("#previous").click(function () {
 				var page = parseInt($("#currentPage").html());
-				if(page == 1){
-					return;
+				if (page == 1) {
+					return
 				}
 				page--;
-				location.href = "/book?page="+page;
+				//js发送请求到后台
+				location.href = "/book?page=" + page;
 			})
-
-			$("#first").click(function () {
+			$("#first").click(function() {
 				location.href = "/book?page=1";
 			})
-
-			$("#last").click(function(){
+			$("#last").click(function() {
 				var pages = parseInt($("#pages").html());
-				location.href = "/book?page="+pages;
+				location.href = "/book?page=" + pages;
 			})
 		})
 	</script>
@@ -80,21 +78,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<td>操作</td>
 			</tr>
 
-<%--			<c:forEach items="${list}" var="book">--%>
-<%--				<tr>--%>
-<%--					<td>${book.id}</td>--%>
-<%--					<td>${book.name}</td>--%>
-<%--					<td>${book.author}</td>--%>
-<%--					<td>${book.publish}</td>--%>
-<%--					<td>${book.pages}</td>--%>
-<%--					<td>${book.price}</td>--%>
-<%--					<td>${book.bookCase.name}</td>--%>
-<%--					<td>--%>
-<%--						<a href="/book?method=addBorrow&bookid=${book.id}">借阅</a>--%>
-<%--					</td>--%>
-<%--				</tr>--%>
-<%--			</c:forEach>--%>
-
 			<c:forEach items="${list}" var="book">
 				<tr>
 					<td>${book.id}</td>
@@ -116,7 +99,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<div class="pageControl_item">每页<font id="dataPrePage">${dataPrePage }</font>条数据</div>
 			<div class="pageControl_item" id="last">最后一页</div>
 			<div class="pageControl_item" id="next">下一页</div>
-			<div class="pageControl_item"><font id="currentPage">${currentPage }</font>/<font id="pages">${pages }</font></div>
+			<div class="pageControl_item"><font id="currentPage">${currentPage }</font>/<font id="pages">${pages}</font></div>
 			<div class="pageControl_item" id="previous">上一页</div>
 			<div class="pageControl_item" id="first">首页</div>
 		</div>
