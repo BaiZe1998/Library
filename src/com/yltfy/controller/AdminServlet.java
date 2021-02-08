@@ -47,7 +47,22 @@ public class AdminServlet extends HttpServlet {
                 String stateStr = req.getParameter("state");
                 Integer state = Integer.parseInt(stateStr);
                 bookService.handle(id, admin.getId(), state);
-                resp.sendRedirect("/admin?page=" + page);
+                if (state <= 2)
+                    resp.sendRedirect("/admin?page=" + page);
+                else
+                    resp.sendRedirect("/admin?method=getBorrowed&page=" + page);
+                break;
+            case "getBorrowed":
+                pageStr = req.getParameter("page");
+                page = Integer.parseInt(pageStr);
+                //查询所有状态为1的借书数据，并且分页处理
+                list = bookService.findAllBorrowByState(1, page);
+                req.setAttribute("list", list);
+                req.setAttribute("dataPrePage", 6);
+                req.setAttribute("currentPage", page);
+                //查询有多少页，结果已经是在service中完成转换的页数
+                req.setAttribute("pages", bookService.getBorrowStatePages(1));
+                req.getRequestDispatcher("/return.jsp").forward(req, resp);
                 break;
         }
     }
