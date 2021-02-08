@@ -1,9 +1,11 @@
 package com.yltfy.controller;
 
 import com.yltfy.entity.Book;
+import com.yltfy.entity.Borrow;
 import com.yltfy.entity.Reader;
 import com.yltfy.service.BookService;
 import com.yltfy.service.impl.BookServiceImpl;
+import jdk.jshell.spi.SPIResolutionException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,6 +28,8 @@ public class BookServlet extends HttpServlet {
         String method = req.getParameter("method");
         if (method == null)
             method = "findAll";
+        HttpSession session = req.getSession();
+        Reader reader = (Reader) session.getAttribute("reader");
         switch (method) {
             case "findAll":
                 //获取数据
@@ -41,14 +45,23 @@ public class BookServlet extends HttpServlet {
                 req.getRequestDispatcher("/index.jsp").forward(req, resp);
                 break;
             case "addBorrow":
-                HttpSession session = req.getSession();
-                Reader reader = (Reader) session.getAttribute("reader");
                 String bookidStr = req.getParameter("bookid");
                 Integer bookid = Integer.parseInt(bookidStr);
                 //向Service发送借书请求
                 //前一层给后一层传数据（调用后一层的方法）都是用了后一层的接口的多态去调用
                 bookService.addBorrow(bookid, reader.getId());
-                resp.sendRedirect("/book?page=1");
+                //跳转到当前用户所借的书的汇总界面
+                resp.sendRedirect("/book?method=findAllBorrow&page=1");
+                break;
+            case "findAllBorrow":
+                pageStr = req.getParameter("page");
+                page = Integer.parseInt(pageStr);
+                List<Borrow> borrowList =  bookService.findAllBorrowByReaderId(reader.getId(), page);
+                req.setAttribute("borrowList", borrowList);
+                req.setAttribute("dataPrePage", 6);
+                req.setAttribute("currentPage", page);
+                req.setAttribute("pages", bookService.getBorrowPages(reader.getId()));
+                req.getRequestDispatcher("/borrow.jsp").forward(req, resp);
                 break;
         }
     }

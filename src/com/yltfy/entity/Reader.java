@@ -7,6 +7,13 @@ public class Reader {
     private String name;
     private String tel;
     private String cardid;
+
+    public Reader(String name, String tel, String cardid) {
+        this.name = name;
+        this.tel = tel;
+        this.cardid = cardid;
+    }
+
     private String gender;
 
     public Reader(Integer id, String username, String password, String name, String tel, String cardid, String gender) {

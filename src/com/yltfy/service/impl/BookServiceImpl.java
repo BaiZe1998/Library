@@ -1,6 +1,7 @@
 package com.yltfy.service.impl;
 
 import com.yltfy.entity.Book;
+import com.yltfy.entity.Borrow;
 import com.yltfy.repository.BookRepository;
 import com.yltfy.repository.BorrowRepository;
 import com.yltfy.repository.impl.BookRepositoryImpl;
@@ -47,5 +48,17 @@ public class BookServiceImpl implements BookService {
         Date date1 = calendar.getTime();
         String returnTime = simpleDateFormat.format(date1);
         borrowRepository.insert(bookid, readerid, borrowTime, returnTime);
+    }
+
+    @Override
+    public List<Borrow> findAllBorrowByReaderId(Integer id, Integer page) {
+        return borrowRepository.findAllBorrowByReaderId(id, page, LIMIT);
+    }
+
+    @Override
+    public int getBorrowPages(Integer id) {
+        int pages = borrowRepository.getBorrowPages(id);
+        if (pages % LIMIT == 0) return pages / LIMIT;
+        else return pages / LIMIT + 1;
     }
 }
