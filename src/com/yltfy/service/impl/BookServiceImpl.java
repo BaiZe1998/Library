@@ -61,4 +61,22 @@ public class BookServiceImpl implements BookService {
         if (pages % LIMIT == 0) return pages / LIMIT;
         else return pages / LIMIT + 1;
     }
+
+    @Override
+    public List<Borrow> findAllBorrowByState(Integer state, Integer page) {
+        //接收的page需要转化为两个数值page 和 limit
+        return borrowRepository.findAllBorrowByState(state, page, LIMIT);
+    }
+
+    @Override
+    public int getBorrowStatePages(Integer state) {
+        int pages = borrowRepository.borrowRepository(state);
+        if (pages % LIMIT == 0) return pages / LIMIT;
+        else return pages / LIMIT + 1;
+    }
+
+    @Override
+    public void handle(Integer id, Integer adminId, Integer state) {
+        borrowRepository.handle(id, adminId, state);
+    }
 }

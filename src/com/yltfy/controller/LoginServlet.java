@@ -39,6 +39,7 @@ public class LoginServlet extends HttpServlet {
                 case "admin":
                     Admin admin = (Admin) object;
                     session.setAttribute("admin", admin);
+                    resp.sendRedirect("/admin?page=1");
                     break;
             }
         } else {

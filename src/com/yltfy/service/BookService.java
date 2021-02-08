@@ -11,4 +11,7 @@ public interface BookService {
     public void addBorrow(Integer bookid, Integer readerid);
     public List<Borrow> findAllBorrowByReaderId(Integer id, Integer page);
     public int getBorrowPages(Integer id);
+    public List<Borrow> findAllBorrowByState(Integer state, Integer page);
+    public int getBorrowStatePages(Integer state);
+    public void handle(Integer id, Integer adminId, Integer state);
 }
